@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.5s;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://placehold.co/1920x1080') center/cover fixed;
+            height: 80vh;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, white, transparent);
+        }
+
+        .product-card {
+            height: 100%;
+            transition: all 0.5s ease;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            height: 300px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+            font-weight: bold;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #212529, transparent);
+        }
+
+        /* Swiper Styles */
+        .swiper {
+            width: 100%;
+            padding: 50px 0;
+        }
+        
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: 300px;
+            height: 550px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+        }
+        
+        .swiper-slide:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+            transition: all 0.5s ease;
+        }
+        
+        .swiper-slide:hover img {
+            transform: scale(1.05);
+        }
+        
+        .slide-content {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 1.5rem;
+        }
+        
+        .slide-content .btn {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .swiper-slide:hover .slide-content .btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-dark {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-dark::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.5s ease;
+        }
+
+        .btn-dark:hover::after {
+            width: 100%;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            transform: scale(1.2);
+        }
+
+        .swiper-pagination-bullet {
+            transition: all 0.3s ease;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: #000;
+            transform: scale(1.5);
+        }
+
+        /* Service Card */
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .service-icon {
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+        }
+
+        /* Blog Card */
+        .blog-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .blog-card img {
+            height: 250px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .blog-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .blog-card .btn-link {
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .blog-card .btn-link:hover {
+            padding-left: 10px !important;
+        }
+
+        /* Countdown */
+        .countdown h3 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .countdown small {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Navigation Placeholder -->
+    <div id="nav-placeholder"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section d-flex align-items-center justify-content-center" data-aos="fade-down">
+        <div class="container text-center">
+            <h1 class="display-3 fw-bold mb-4" data-aos="fade-up" data-aos-delay="200">Thời Trang Cho Mọi Người</h1>
+            <p class="lead fs-3 mb-4" data-aos="fade-up" data-aos-delay="400">Khám phá bộ sưu tập mới nhất của chúng tôi</p>
+            <a href="#products" class="btn btn-light btn-lg px-5 py-3" data-aos="fade-up" data-aos-delay="600">Mua sắm ngay</a>
+        </div>
+    </section>
+
+    <!-- Slider Section -->
+    <section class="py-5" data-aos="fade-up">
+        <div class="container">
+            <h2 class="text-center section-heading">Xu Hướng Mới Nhất</h2>
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/300x400" alt="Size S">
+                        <div class="slide-content text-center p-3">
+                            <h5 class="mb-2">Áo Thun Size S</h5>
+                            <p class="text-danger fw-bold mb-2">299.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/300x400" alt="Size M">
+                        <div class="slide-content text-center p-3">
+                            <h5 class="mb-2">Áo Sơ Mi Size M</h5>
+                            <p class="text-danger fw-bold mb-2">399.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/300x400" alt="Size L">
+                        <div class="slide-content text-center p-3">
+                            <h5 class="mb-2">Áo Khoác Size L</h5>
+                            <p class="text-danger fw-bold mb-2">599.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/300x400" alt="Size XL">
+                        <div class="slide-content text-center p-3">
+                            <h5 class="mb-2">Áo Polo Size XL</h5>
+                            <p class="text-danger fw-bold mb-2">459.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://placehold.co/300x400" alt="Size XXL">
+                        <div class="slide-content text-center p-3">
+                            <h5 class="mb-2">Áo Vest Size XXL</h5>
+                            <p class="text-danger fw-bold mb-2">899.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center section-heading" data-aos="fade-up">Danh Mục Sản Phẩm</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <a href="category.html" class="text-decoration-none">
+                        <div class="product-card">
+                            <img src="https://placehold.co/600x800" alt="Men's Fashion" class="w-100">
+                            <div class="p-4 text-center">
+                                <h3 class="mb-0 text-dark">Thời Trang Nam</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <a href="category-women.html" class="text-decoration-none">
+                        <div class="product-card">
+                            <img src="https://placehold.co/600x800" alt="Women's Fashion" class="w-100">
+                            <div class="p-4 text-center">
+                                <h3 class="mb-0 text-dark">Thời Trang Nữ</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <a href="category-accessories.html" class="text-decoration-none">
+                        <div class="product-card">
+                            <img src="https://placehold.co/600x800" alt="Accessories" class="w-100">
+                            <div class="p-4 text-center">
+                                <h3 class="mb-0 text-dark">Phụ Kiện</h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center section-heading" data-aos="fade-up">Sản Phẩm Nổi Bật</h2>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" 
+                                 class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">Mới</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Áo Thun Size S</h5>
+                            <p class="card-text text-danger fw-bold">299.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" 
+                                 class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">Mới</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Áo Sơ Mi Size M</h5>
+                            <p class="card-text text-danger fw-bold">399.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" 
+                                 class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">Mới</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Áo Khoác Size L</h5>
+                            <p class="card-text text-danger fw-bold">599.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" 
+                                 class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">Mới</span>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Áo Vest Size XXL</h5>
+                            <p class="card-text text-danger fw-bold">899.000₫</p>
+                            <button class="btn btn-dark w-100 add-to-cart-btn">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Products -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5" data-aos="fade-up">Xu Hướng Mùa Này</h2>
+            <div class="row g-4">
+                <!-- Trending Product 1 -->
+                <div class="col-6 col-md-3" data-aos="fade-up">
+                    <div class="product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">HOT</span>
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="product-title">Áo Blazer Nam</h5>
+                            <p class="product-price">899.000₫</p>
+                            <button class="btn btn-dark w-100">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Trending Product 2 -->
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">HOT</span>
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="product-title">Quần Âu Nam</h5>
+                            <p class="product-price">599.000₫</p>
+                            <button class="btn btn-dark w-100">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Trending Product 3 -->
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">HOT</span>
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="product-title">Áo Khoác Denim</h5>
+                            <p class="product-price">799.000₫</p>
+                            <button class="btn btn-dark w-100">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Trending Product 4 -->
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="product-card">
+                        <div class="position-relative">
+                            <img src="https://placehold.co/300x400" class="card-img-top" alt="Product">
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3">HOT</span>
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="product-title">Áo Len Nam</h5>
+                            <p class="product-price">499.000₫</p>
+                            <button class="btn btn-dark w-100">
+                                <i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sale Banner -->
+    <section class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6" data-aos="fade-right">
+                    <h2 class="display-4 fw-bold mb-4">Giảm Giá Đến 50%</h2>
+                    <p class="lead mb-4">Ưu đãi đặc biệt cho tất cả sản phẩm mùa đông. Nhanh tay sở hữu ngay!</p>
+                    <div class="countdown d-flex gap-4 mb-4">
+                        <div class="text-center">
+                            <h3 class="mb-0" id="days">00</h3>
+                            <small>Ngày</small>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mb-0" id="hours">00</h3>
+                            <small>Giờ</small>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mb-0" id="minutes">00</h3>
+                            <small>Phút</small>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="mb-0" id="seconds">00</h3>
+                            <small>Giây</small>
+                        </div>
+                    </div>
+                    <p class="mb-4">Chương trình kết thúc vào: 31/12/2024 23:59:59</p>
+                    <a href="category.html" class="btn btn-light btn-lg">Mua ngay</a>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <img src="https://placehold.co/600x400" class="img-fluid rounded" alt="Sale">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="service-card text-center p-4">
+                        <div class="service-icon mb-4">
+                            <i class="bi bi-truck display-4"></i>
+                        </div>
+                        <h4 class="mb-3">Giao Hàng Toàn Quốc</h4>
+                        <p class="text-muted mb-0">Miễn phí giao hàng cho đơn hàng từ 500.000₫. Giao hàng nhanh chóng trong 2-3 ngày.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card text-center p-4">
+                        <div class="service-icon mb-4">
+                            <i class="bi bi-arrow-repeat display-4"></i>
+                        </div>
+                        <h4 class="mb-3">Đổi Trả Dễ Dàng</h4>
+                        <p class="text-muted mb-0">Chính sách đổi trả trong 30 ngày. Hoàn tiền 100% nếu sản phẩm lỗi.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card text-center p-4">
+                        <div class="service-icon mb-4">
+                            <i class="bi bi-shield-check display-4"></i>
+                        </div>
+                        <h4 class="mb-3">Bảo Hành Chính Hãng</h4>
+                        <p class="text-muted mb-0">Cam kết 100% hàng chính hãng. Bảo hành sản phẩm theo quy định của nhà sản xuất.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5" data-aos="fade-up">Tin Tức & Bài Viết</h2>
+            <div class="row g-4">
+                <!-- Blog Post 1 -->
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="blog-card">
+                        <img src="https://placehold.co/600x400" class="card-img-top" alt="Blog">
+                        <div class="card-body p-4">
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar me-2"></i>01/03/2024
+                                </small>
+                            </div>
+                            <h5 class="card-title mb-3">Xu Hướng Thời Trang 2024</h5>
+                            <p class="card-text text-muted">Khám phá những xu hướng thời trang mới nhất năm 2024 cùng với các gợi ý phối đồ...</p>
+                            <a href="#" class="btn btn-link text-dark p-0">Đọc thêm <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Blog Post 2 -->
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="blog-card">
+                        <img src="https://placehold.co/600x400" class="card-img-top" alt="Blog">
+                        <div class="card-body p-4">
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar me-2"></i>28/02/2024
+                                </small>
+                            </div>
+                            <h5 class="card-title mb-3">Cách Chọn Trang Phục Công Sở</h5>
+                            <p class="card-text text-muted">Hướng dẫn chi tiết cách chọn trang phục công sở phù hợp cho nam và nữ...</p>
+                            <a href="#" class="btn btn-link text-dark p-0">Đọc thêm <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Blog Post 3 -->
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="blog-card">
+                        <img src="https://placehold.co/600x400" class="card-img-top" alt="Blog">
+                        <div class="card-body p-4">
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar me-2"></i>25/02/2024
+                                </small>
+                            </div>
+                            <h5 class="card-title mb-3">Bí Quyết Mix & Match</h5>
+                            <p class="card-text text-muted">Những bí quyết phối đồ cơ bản giúp bạn luôn nổi bật và thời trang...</p>
+                            <a href="#" class="btn btn-link text-dark p-0">Đọc thêm <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Shared Components -->
+    <script src="shared.js"></script>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Loading animation
+        window.addEventListener('load', function() {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 500);
+        });
+
+        // Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            loop: true,
+            coverflowEffect: {
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+
+        // Countdown Timer
+        function updateCountdown() {
+            const endDate = new Date('2024-12-31T23:59:59').getTime();
+            const now = new Date().getTime();
+            const distance = endDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerHTML = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerHTML = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerHTML = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerHTML = seconds.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById('days').innerHTML = '00';
+                document.getElementById('hours').innerHTML = '00';
+                document.getElementById('minutes').innerHTML = '00';
+                document.getElementById('seconds').innerHTML = '00';
+            }
+        }
+
+        const countdownTimer = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
+

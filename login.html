@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Fashion Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        
+        .auth-card {
+            max-width: 400px;
+            width: 100%;
+            animation: slideUp 0.5s ease;
+        }
+
+        .shop-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .shop-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--bs-dark);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .auth-card .nav-link {
+            color: #666;
+            padding: 1rem;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-card .nav-link.active {
+            color: var(--bs-dark);
+            background: none;
+        }
+        
+        .auth-card .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--bs-dark);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .auth-card .nav-link.active::after {
+            width: 100%;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group-text {
+            background: transparent;
+            border-right: 0;
+        }
+
+        .input-group .form-control {
+            border-left: 0;
+        }
+
+        .input-group .form-control:focus {
+            border-left: 0;
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
+        .input-group-text i {
+            color: #666;
+            width: 1rem;
+            text-align: center;
+        }
+        
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dee2e6;
+            color: #666;
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+        
+        .social-btn:hover {
+            background: var(--bs-dark);
+            color: white;
+            border-color: var(--bs-dark);
+            transform: scale(1.1);
+        }
+
+        .btn-dark {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-dark::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-dark:hover::after {
+            left: 100%;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--bs-dark);
+            border-color: var(--bs-dark);
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center min-vh-100 py-5">
+    <div class="container">
+        <div class="auth-card mx-auto bg-white rounded-3 shadow-sm p-4">
+            <!-- Shop Logo & Name -->
+            <div class="text-center">
+                <img src="https://placehold.co/80x80" alt="Shop Logo" class="shop-logo">
+                <h1 class="shop-name">Fashion Store</h1>
+            </div>
+
+            <!-- Auth Tabs -->
+            <ul class="nav nav-pills nav-fill mb-4" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#login-tab" type="button">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#register-tab" type="button">
+                        <i class="bi bi-person-plus me-2"></i>Đăng ký
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Login Tab -->
+                <div class="tab-pane fade show active" id="login-tab">
+                    <form id="loginForm" onsubmit="return handleLogin(event)">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            <input type="email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" placeholder="Mật khẩu" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="remember">
+                                <label class="form-check-label" for="remember">Ghi nhớ</label>
+                            </div>
+                            <a href="#forgot-modal" data-bs-toggle="modal" class="text-dark text-decoration-none">
+                                <i class="bi bi-question-circle me-1"></i>Quên mật khẩu?
+                            </a>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 mb-4">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập
+                        </button>
+                        
+                        <div class="text-center">
+                            <p class="text-muted mb-3">Hoặc đăng nhập với</p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="#" class="social-btn">
+                                    <i class="bi bi-facebook"></i>
+                                </a>
+                                <a href="#" class="social-btn">
+                                    <i class="bi bi-google"></i>
+                                </a>
+                                <a href="#" class="social-btn">
+                                    <i class="bi bi-apple"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Register Tab -->
+                <div class="tab-pane fade" id="register-tab">
+                    <form>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Họ và tên">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-phone"></i>
+                            </span>
+                            <input type="tel" class="form-control" placeholder="Số điện thoại">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" placeholder="Mật khẩu">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-shield-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                        </div>
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="terms">
+                            <label class="form-check-label" for="terms">
+                                Tôi đồng ý với <a href="#" class="text-dark">điều khoản</a> và <a href="#" class="text-dark">chính sách</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">
+                            <i class="bi bi-person-plus me-2"></i>Đăng ký
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgot-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        <i class="bi bi-key me-2"></i>Quên mật khẩu
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-4">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Nhập email của bạn để nhận hướng dẫn đặt lại mật khẩu.
+                    </p>
+                    <form>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">
+                            <i class="bi bi-send me-2"></i>Gửi yêu cầu
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            // Trong thực tế, bạn sẽ thêm logic kiểm tra đăng nhập ở đây
+            window.location.href = 'index.html'; // Chuyển hướng về trang chủ
+            return false;
+        }
+    </script>
+</body>
+</html> 
