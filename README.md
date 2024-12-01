@@ -1,8 +1,9 @@
 # Fashion Store
 
 Fashion Store là một template website thương mại điện tử chuyên về thời trang, cung cấp các sản phẩm quần áo và phụ kiện thời trang cao cấp cho nam và nữ phát triển bởi HartLow (Phát)
-
+![image](https://github.com/user-attachments/assets/f44ab3c2-4577-45df-8708-327ac0fa7933)
 ## 🌟 Tính năng chính
+
 
 - **Trang chủ**
   - Slider sản phẩm xu hướng mới nhất
