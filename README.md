@@ -61,7 +61,7 @@ Fashion Store là một template website thương mại điện tử chuyên v�
 
 1. Clone repository:
 ```bash
-git clone https://github.com/yourusername/fashion-store.git
+git clone https://github.com/LvPhat2004/ShopBanQuanAo
 ```
 
 2. Mở file `index.html` trong trình duyệt web để xem trang chủ.
